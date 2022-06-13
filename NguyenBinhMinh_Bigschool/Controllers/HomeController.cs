@@ -5,6 +5,7 @@ using System.Linq;
 using System.Data.Entity;
 using System.Web;
 using System.Web.Mvc;
+using NguyenBinhMinh_Bigschool.ViewModels;
 
 namespace NguyenBinhMinh_Bigschool.Controllers
 {
@@ -17,12 +18,19 @@ namespace NguyenBinhMinh_Bigschool.Controllers
         }
         public ActionResult Index()
         {
-            var upcomingCourse = _dbContext.Course
+            var upcommingCourse = _dbContext.Courses
                 .Include(c => c.Lecturer)
                 .Include(c => c.Category)
                 .Where(c => c.DateTime > DateTime.Now);
-            return View(upcomingCourse);
+            var viewModel = new CoursesViewModel
+            {
+                UpcommingCourse = upcommingCourse,
+                ShowAction = User.Identity.IsAuthenticated
+            };
+            return View(viewModel);
+            
         }
+
 
         public ActionResult About()
         {

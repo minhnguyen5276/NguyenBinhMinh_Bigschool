@@ -1,22 +1,10 @@
-﻿@model IEnumerable<NguyenBinhMinh_Bigschool.Models.Course>
+﻿@model  NguyenBinhMinh_Bigschool.ViewModels.CoursesViewModel
 @{
     ViewBag.Title = "Home Page";
 }
 <div class="row">
-    <ul>
-        @foreach(var course in Model)
-            {
-                <li>
-                    @course.DateTime - @course.Lecturer.Name
-                </li>
-            }
-    </ul>
-</div>
-
-
-<ul class="course">
-    
-        @foreach (var course in Model)
+    <ul class="course">
+        @foreach (var course in Model.UpcommingCourse)
         {
             <li>
                 <div class="date">
@@ -32,32 +20,29 @@
                         @course.Lecturer.Name
                     </span>
                     <span class="category">
-                        @course.Lecturer.Name
+                        @course.Category.Name
                     </span>
-                    <button data-course-id="@course.Id"class="btn btn-default btn-sm js-toggle-attendance">Going?</button>
+                    <button data-course-id="@course.Id" class="btn btn-default btn-sm js-toggle-attendance">Going?</button>
                 </div>
-
             </li>
         }
-
-
- <</ul>  
-@section scripts{
-    <script>
-        & (document).ready(function)(){
-            $(".js-toggle-attendance").click(function (e) {
+    </ul>
+    @section scripts
+        {
+        <script>
+            $(document).ready(function () {
                 var button = $(e.target);
                 $.post("/api/attendances", { courseId: button.attr("data-course-id") })
                     .done(function () {
-                        button
-                            .removeClass("btn-default")
+                                    .removeClass("btn-default")
                             .addClass("btn-info")
-                            .text("Going");
+                            .text("Going")
                     })
                     .fail(function () {
-                        alert("Something failed");
+                        alert("Something failed!")
                     });
             });
-        });
-    </script>
+                        });
+        </script>
     }
+</div>

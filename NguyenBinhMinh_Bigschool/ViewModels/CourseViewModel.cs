@@ -9,6 +9,7 @@ namespace NguyenBinhMinh_Bigschool.ViewModels
 {
     public class CourseViewModel
     {
+
         [Required]
         public string Place { get; set; }
         [Required]
