@@ -16,6 +16,16 @@ namespace NguyenBinhMinh_Bigschool.Models
         {
             _dbContext = new ApplicationDbContext();
         }
+        [Authorize]
+        public ActionResult Create()
+        {
+            var viewModel = new CourseViewModel
+            {
+                Categories = _dbContext.Categories.ToList(),
+                Heading = "Add Course",
+            };
+            return View(viewModel);
+        }
         // GET: Courses
         [Authorize]
         [HttpPost]
@@ -69,6 +79,7 @@ namespace NguyenBinhMinh_Bigschool.Models
                 .ToList();
             return View(courses);
         }
+        
         [Authorize]
         public ActionResult Edit(int id)
         {
@@ -80,10 +91,29 @@ namespace NguyenBinhMinh_Bigschool.Models
                 Date = course.DateTime.ToString("dd/M/yyyy"),
                 Time = course.DateTime.ToString("HH/mm"),
                 Category = course.CategoryId,
-                Place=course.Place
+                Place=course.Place,
+                Heading = "Edit Course",
+                Id = course.Id
 
             };
             return View("Create",viewModel);
+        }
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public ActionResult Update(CourseViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                viewModel.Categories = _dbContext.Categories.ToList();
+                return View("Create", viewModel);
+            }
+            var userId = User.Identity.GetUserId();
+            var course = _dbContext.Courses.Single(c => c.Id == viewModel.Id && c.LecturerId == userId);
+
+            _dbContext.SaveChanges();
+            return RedirectToAction("Index", "Home");
         }
     }
 }
